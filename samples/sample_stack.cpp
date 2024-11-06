@@ -7,12 +7,12 @@ using namespace std;
 
 //---------------------------------------------------------------------------
 bool IsOpenBracket(char t){
-    if (t=='(' or t=='[' or t=='{') return 1;
+    if ((t=='(') || (t == '[') || (t == '{')) return 1;
     return 0;
 }
 
 bool IsCloseBracket(char t){
-    if (t==')' or t==']' or t=='}') return 1;
+    if ((t==')') || (t==']') || (t=='}')) return 1;
     return 0;
 }
 
@@ -30,21 +30,20 @@ int main(int argc, const char * argv[]) {
     int flag=0;
     
     for(int i=0;i<Expression.length();i++){
-        if (IsOpenBracket(Expression[i])){
-            stack.push_back(Expression[i]);
+        if (IsOpenBracket(Expression[i])){  //если открывающаяся скобка, то в помещаем её в стек
+            stack.push_back(Expression[i]); 
         }
-        if(IsCloseBracket(Expression[i])){
+        if(IsCloseBracket(Expression[i])){  //если закрывающаяся
             if (stack.IsEmpty()) flag++;
             else{
-                if (stack.back()!=GetOpenBracket(Expression[i]))flag++;
+                if (stack.back()!=GetOpenBracket(Expression[i]))flag++; //если открывающаяся скобка не соотносится с закрывающейся
                 else{
-                    if (stack.IsEmpty() == 0) (stack.pop_back());
-                    else flag++;
+                    stack.pop_back();
                 }}}}
           
     if(stack.IsEmpty()!=1) flag++;
-    if (flag==0) cout<<"\nВсе хорошо!";
-    else cout<<"\nГде-то ошибка(";
+    if (flag==0) cout<<"\nOK!\n";
+    else cout<<"\nThere is a mistake\n";
     return 0;
 }
 //---------------------------------------------------------------------------

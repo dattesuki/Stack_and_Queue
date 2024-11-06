@@ -98,5 +98,5 @@ private:
 	//переопределение незадействованных методов
 	void push_front(T el) override{};
 	void pop_front() override {};
-	T front() override {};
+	T front() override { return T(); };
 };
