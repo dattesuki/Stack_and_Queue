@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include <cstring>
 template <typename T>
 class Vector {
 protected:
@@ -106,12 +107,12 @@ public:
 		}
 		return temp;
 	}
-	friend std::ostream& operator << (std::ostream& os, const Vector& v);
+	friend std::ostream& operator << (std::ostream& os, const Vector<T>& v);
 };
 
 template <typename T>
 std::ostream& operator << (std::ostream& os, const Vector<T>& v) {
-	for (size_t i = 0; i < sz; ++i) os << pMem[i] << " ";
+	for (size_t i = 0; i < v.sz; ++i) os << v.pMem[i] << " ";
 	return os;
 }
 
@@ -124,9 +125,9 @@ private:
 	void pop_front() override {};
 	T front() override { return T(); }
 	void insert(T el, size_t ind) {};
-	using Vector::operator[];
+	using Vector<T>::operator[];
 public:
-	Stack(size_t n=10) : Vector(n) {};
+	Stack(size_t n=10) : Vector<T>(n) {};
 	void push(T el) { this->push_back(el); }
 	void pop() { this->pop_back(); }
 	T get() { return this->back(); }
@@ -137,40 +138,40 @@ template <typename T>
 class Queue : public Vector<T> {
 private:
 	//переопределение незадействованных методов
-	using Vector::operator[];
+	using Vector<T>::operator[];
 	void push_front(T el) override {};
 	void pop_back() override {};
 	void insert(T el, size_t ind) override {};
-	using Vector::Overexpression;
+	using Vector<T>::Overexpression;
 public:
 	size_t start = 0;
 	size_t end = 0;
-	Queue(size_t n = 10) :Vector(n) {};
+	Queue(size_t n = 10) :Vector<T>(n) {};
 	void push_back(T el) override {
-		if (IsFull()) throw std::logic_error("error");
-		if (end < (capacity - 1)) pMem[end++] = el;
-		else pMem[end = 0] = el;
-		++sz;
+		if (Vector<T>::IsFull()) throw std::logic_error("error");
+		if (end < (Vector<T>::capacity - 1)) Vector<T>::pMem[end++] = el;
+		else Vector<T>::pMem[end = 0] = el;
+		++Vector<T>::sz;
 	}
 	void enqueue(T el) {this->push_back(el);}
 	void pop_front() override {
-		if (IsEmpty()) throw std::logic_error("error");
-		if (start == (capacity - 1)) start = 0;
+		if (Vector<T>::IsEmpty()) throw std::logic_error("error");
+		if (start == (Vector<T>::capacity - 1)) start = 0;
 		else ++start;
-		--sz;
+		--Vector<T>::sz;
 	}
 	void dequeue() { this->pop_front(); }
 	T front() override{
-		if (IsEmpty()) throw std::logic_error("error");
-		return pMem[start];
+		if (Vector<T>::IsEmpty()) throw std::logic_error("error");
+		return Vector<T>::pMem[start];
 	}
 	T back() override { 
-		if (IsEmpty()) throw std::logic_error("error");
-		return pMem[end]; 
+		if (Vector<T>::IsEmpty()) throw std::logic_error("error");
+		return Vector<T>::pMem[end];
 	}
 	T get() { return this->front(); }
 	
-	friend std::ostream& operator<<(std::ostream& os, const Queue& v);
+	friend std::ostream& operator<<(std::ostream& os, const Queue<T>& v);
 };
 
 template <typename T>
