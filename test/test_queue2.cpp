@@ -3,88 +3,85 @@
 #include <vector>
 #include <queue>
 
-TEST(Queue, can_create_stack_with_positive_length)
+TEST(Queue2, can_create_stack_with_positive_length)
 {
-	ASSERT_NO_THROW(Queue<int> v(5));
+	ASSERT_NO_THROW(Queue2<int> v(5));
 }
 
-TEST(Queue, throws_when_create_stack_with_negative_length)
+TEST(Queue2, throws_when_create_stack_with_negative_length)
 {
-	ASSERT_ANY_THROW(Queue<int> v(-5));
+	ASSERT_ANY_THROW(Queue2<int> v(-5));
 }
 
-TEST(Queue, copied_stack_has_its_own_memory)
+TEST(Queue2, copied_stack_has_its_own_memory)
 {
-	Queue<int> v1(5), v2(5);
-	Queue<int>* pv1 = &v1;
-	Queue<int>* pv2 = &v2;
+	Queue2<int> v1(5), v2(5);
+	Queue2<int>* pv1 = &v1;
+	Queue2<int>* pv2 = &v2;
 	EXPECT_NE(pv1, pv2);
 }
 
-TEST(Queue, can_get_size)
+TEST(Queue2, can_get_size)
 {
-	Queue<int> v(4);
+	Queue2<int> v(4);
 
 	EXPECT_EQ(0, v.size());
 }
 
-TEST(Queue, can_get_size2)
+TEST(Queue2, can_get_size2)
 {
-	Queue<int> v(4);
+	Queue2<int> v(4);
 	v.push_back(5);
 	EXPECT_EQ(1, v.size());
 }
 
-TEST(Queue, can_get_size3)
+TEST(Queue2, can_get_size3)
 {
-	Queue<int> v(16);
+	Queue2<int> v(16);
 	for (size_t temp = 0; temp < 10; ++temp) v.push_back(5);
 	EXPECT_EQ(10, v.size());
 }
 
 
-TEST(Queue, check_push)
+TEST(Queue2, check_push)
 {
-	Queue<int> v1;
+	Queue2<int> v1;
 	std::vector<int> v2;
 	v2.push_back(1);
 	v2.push_back(2);
 	v1.enqueue(1);
 	v1.enqueue(2);
-	EXPECT_EQ(v1.GetVector(), v2);
+	EXPECT_EQ(GetVector(v1), v2);
 }
 
 
-TEST(Queue, check_pop)
-{
-	Queue<int> v1;
-	std::vector<int> v2;
-	v2.push_back(1);
-	v2.pop_back();
-	v2.push_back(2);
-	v1.enqueue(2);
-	v1.dequeue();
+TEST(Queue2, check_pop) {
+	Queue2<int> v1;
 	v1.enqueue(1);
-	EXPECT_EQ(v1.GetVector(), v2);
+	v1.enqueue(2);
+	v1.dequeue();  
+	v1.enqueue(3);
+	std::vector<int> v2 = { 2, 3 };  
+	EXPECT_EQ(GetVector(v1), v2);  
 }
 
-TEST(Queue, check_throw1_pop)
+TEST(Queue2, check_throw1_pop)
 {
-	Queue<int> v;
+	Queue2<int> v;
 	ASSERT_ANY_THROW(v.dequeue());
 }
 
 
-TEST(Queue, check_throw2_get)
+TEST(Queue2, check_throw2_get)
 {
-	Queue<int> v;
+	Queue2<int> v;
 	ASSERT_ANY_THROW(v.get());
 }
 
 
-TEST(Queue, check_get_front)
+TEST(Queue2, check_get_front)
 {
-	Queue<int> v1;
+	Queue2<int> v1;
 	std::vector<int> v2;
 	v2.push_back(1);
 	v2.push_back(2);
@@ -93,28 +90,22 @@ TEST(Queue, check_get_front)
 	EXPECT_EQ(v1.get(), v2.front());
 }
 
-TEST(Queue, soft_test) {
-	Queue<float> s1(10);
+TEST(Queue2, soft_test) {
+	Queue2<float> s1(10);
 	std::queue<float> s2;
 	for (int i = 0; i < 9; ++i) {
 		s1.enqueue(i * 2.5);
 		s2.push(i * 2.5);
 	}
-	//start = 0
-	//end = 9
 	bool flag = 1;
 	for (int i = 0; i < 5; ++i) {
 		s1.dequeue();
 		s2.pop();
 	}
-	//start = 5
-	//end = 9;
 	for (int i = 0; i < 3; ++i) {
 		s1.enqueue(i * 2.5);
 		s2.push(i * 2.5);
 	}
-	//start = 5
-	//end = 2
 	for (size_t i = 0; i < s2.size(); ++i) {
 		flag &= (s1.get() == s2.front());
 		s1.dequeue();
@@ -124,8 +115,8 @@ TEST(Queue, soft_test) {
 	EXPECT_EQ(flag, 1);
 }
 
-TEST(Queue, hard_test) {
-	Queue<float> s1(10000);
+TEST(Queue2, hard_test) {
+	Queue2<float> s1(10000);
 	std::queue<float> s2;
 	for (size_t i = 0; i < 1000; ++i) {
 		s1.enqueue(float(i) / 10);

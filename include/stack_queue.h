@@ -1,14 +1,14 @@
 //реализация ветктора
 //выбрана реализация на динамическом массиве
 #include <algorithm>
-
+#include <iostream>
+#include <vector>
 template <typename T>
 class Vector {
-private:
+protected:
 	T* pMem; //указатель на начало массива
 	size_t sz; //количество элементов в векторе
 	size_t capacity; //размер выделенной в данный момент памяти(максимальное кол-во элементов до перевыделения памяти)
-
 public:
 	Vector(size_t _capacity = 0) :sz(0), capacity(_capacity) {
 		if (_capacity < 0) throw std::bad_alloc();
@@ -20,7 +20,7 @@ public:
     Vector(Vector const &v) :sz(v.sz), capacity(v.capacity) {
 		pMem = new T[capacity];
 		if (pMem == nullptr) throw std::bad_alloc();
-		copy(v.pMem, v.pMem+(sz * sizeof(T)), v.pMem);
+		std::copy(v.pMem, v.pMem+(sz * sizeof(T)), v.pMem);
 	}
 
 	Vector(T* arr, size_t size_array):sz(size_array), capacity(size_array) {
@@ -35,24 +35,27 @@ public:
         pMem=nullptr;
     }
     
+	size_t size() { return sz; }
+
 	//перевыделение памяти
 	void Overexpression() {
-		T* temp_pMem = new T[(capacity * 2)];
-		if (temp_pMem == nullptr) throw std::bad_alloc();
-		std::copy(pMem, pMem + (sz * sizeof(T)), temp_pMem); //копирование из pMem в temp_pMem
-		std::swap(pMem, temp_pMem);
-		capacity *= 2;
-		delete[] temp_pMem;
+		T* temp_pMem = new T[(capacity*=2)];
+		memcpy(temp_pMem, pMem, (capacity/2) * sizeof(T));
+		delete[] pMem;
+		pMem = temp_pMem;
 	}
 
-	bool IsFull(){
-		if (sz == capacity) return true;
-		else return false;
+	bool IsFull() {
+		return (sz == capacity);
 	}
 
 	bool IsEmpty() {
-		if (sz == 0) return true;
-		else return false;
+		return (sz == 0);
+	}
+
+	virtual T& operator[](size_t n) { 
+		if (n < 0 || n >= capacity) throw std::logic_error("error");
+		return pMem[n]; 
 	}
 
 	virtual void push_back(T el) {
@@ -78,18 +81,39 @@ public:
 	}
 
     virtual void pop_back() {
-		if (IsEmpty()) std::logic_error("error");
+		if (IsEmpty()) throw std::logic_error("error");
 		--sz;
 	}
 
     virtual void pop_front() {
-		if (IsEmpty()) std::logic_error("error");
+		if (IsEmpty()) throw std::logic_error("error");
 		sz--;
 		for (size_t i = 0; i < (sz); ++i) pMem[i] = pMem[i + 1];
 	}
 	
+	virtual void insert(T el, size_t ind) {
+		if (ind < 0 || ind > sz) throw std::logic_error("error");
+		if (IsFull()) Overexpression();
+		for (size_t i = ind; i < sz; ++i) pMem[i + 1] = pMem[i];
+		pMem[ind] = el;
+		sz++;
+	}
+
+	virtual std::vector<T> GetVector() {
+		std::vector<T> temp;
+		for (size_t i = 0; i < sz; ++i) {
+			temp.push_back(pMem[i]);
+		}
+		return temp;
+	}
+	friend std::ostream& operator << (std::ostream& os, const Vector& v);
 };
 
+template <typename T>
+std::ostream& operator << (std::ostream& os, const Vector<T>& v) {
+	for (size_t i = 0; i < sz; ++i) os << pMem[i] << " ";
+	return os;
+}
 
 
 template <typename T>
@@ -98,5 +122,131 @@ private:
 	//переопределение незадействованных методов
 	void push_front(T el) override{};
 	void pop_front() override {};
-	T front() override { return T(); };
+	T front() override { return T(); }
+	void insert(T el, size_t ind) {};
+	using Vector::operator[];
+public:
+	Stack(size_t n=10) : Vector(n) {};
+	void push(T el) { this->push_back(el); }
+	void pop() { this->pop_back(); }
+	T get() { return this->back(); }
 };
+
+
+template <typename T>
+class Queue : public Vector<T> {
+private:
+	//переопределение незадействованных методов
+	using Vector::operator[];
+	void push_front(T el) override {};
+	void pop_back() override {};
+	void insert(T el, size_t ind) override {};
+	using Vector::Overexpression;
+public:
+	size_t start = 0;
+	size_t end = 0;
+	Queue(size_t n = 10) :Vector(n) {};
+	void push_back(T el) override {
+		if (IsFull()) throw std::logic_error("error");
+		if (end < (capacity - 1)) pMem[end++] = el;
+		else pMem[end = 0] = el;
+		++sz;
+	}
+	void enqueue(T el) {this->push_back(el);}
+	void pop_front() override {
+		if (IsEmpty()) throw std::logic_error("error");
+		if (start == (capacity - 1)) start = 0;
+		else ++start;
+		--sz;
+	}
+	void dequeue() { this->pop_front(); }
+	T front() override{
+		if (IsEmpty()) throw std::logic_error("error");
+		return pMem[start];
+	}
+	T back() override { 
+		if (IsEmpty()) throw std::logic_error("error");
+		return pMem[end]; 
+	}
+	T get() { return this->front(); }
+	
+	friend std::ostream& operator<<(std::ostream& os, const Queue& v);
+};
+
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const Queue<T>& v) {
+	for (size_t i = 0; i < v.sz; ++i) {
+		os << v.get() << " ";
+		v.pop();
+	}
+	return os;
+}
+
+template <typename T>
+class Queue2{
+	Stack<T> stack1;
+	Stack<T> stack2;
+	size_t sz;
+	size_t copacity;
+public:
+	Queue2(size_t n = 10) :stack1(n), stack2(n), sz(0), copacity(n) {}
+	bool IsEmpty() {
+		if (!(stack2.IsEmpty())) {
+			return stack2.IsEmpty();
+		}
+		return stack1.IsEmpty();
+	}
+	void push_back(T el) { ++sz; stack1.push(el); }
+	void enqueue(T el) { this->push_back(el); }
+	void pop_front() {
+		T temp;
+		if (IsEmpty()) throw std::logic_error("error");
+		--sz;
+		if (!stack2.IsEmpty()){
+			stack2.pop();
+		}
+		else {
+			while (!stack1.IsEmpty()) {
+				temp = stack1.get();
+				stack2.push(temp);
+				stack1.pop();
+			}
+			stack2.pop();
+		}
+	}
+	void dequeue() { pop_front(); }
+	T front() {
+		T temp;
+		if (IsEmpty()) throw std::logic_error("error");
+		if (!(stack2.IsEmpty())) {
+			return stack2.get();
+		}
+		while (!(stack1.IsEmpty())) {
+			temp = stack1.get();
+			stack2.push(temp);
+			stack1.pop();
+		}
+		return stack2.get();
+	}
+	size_t size() { return sz; }
+	T get() { return front(); }
+	friend std::ostream& operator<<(std::ostream& os, const Queue2<T>& v);
+};
+template <typename T>
+std::vector<T> GetVector(Queue2<T>& q) {
+	std::vector<T> temp;
+	size_t size = q.size();
+	for (size_t i = 0; i < size; ++i) {
+		temp.push_back(q.get());
+		q.dequeue();
+	}
+	return temp;
+}
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const Queue2<T>& v) {
+	for (size_t i = 0; i < v.sz; ++i) {
+		os << v.get()<<" ";
+		v.pop();
+	}
+	return os;
+}

@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include "stack_queue.h"
-
+#include <string>
 using namespace std;
 
 //---------------------------------------------------------------------------
@@ -25,7 +25,7 @@ char GetOpenBracket(char t){
 
 int main(int argc, const char * argv[]) {
     string Expression;
-    cin>>Expression;
+    getline(cin, Expression);
     Stack<char> stack;
     int flag=0;
     
