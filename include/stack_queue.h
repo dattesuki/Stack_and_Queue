@@ -107,14 +107,8 @@ public:
 		}
 		return temp;
 	}
-	friend std::ostream& operator << (std::ostream& os, const Vector<T>& v);
 };
 
-template <typename T>
-std::ostream& operator << (std::ostream& os, const Vector<T>& v) {
-	for (size_t i = 0; i < v.sz; ++i) os << v.pMem[i] << " ";
-	return os;
-}
 
 
 template <typename T>
@@ -170,18 +164,8 @@ public:
 		return Vector<T>::pMem[end];
 	}
 	T get() { return this->front(); }
-	
-	friend std::ostream& operator<<(std::ostream& os, const Queue<T>& v);
 };
 
-template <typename T>
-std::ostream& operator<<(std::ostream& os, const Queue<T>& v) {
-	for (size_t i = 0; i < v.sz; ++i) {
-		os << v.get() << " ";
-		v.pop();
-	}
-	return os;
-}
 
 template <typename T>
 class Queue2{
@@ -231,7 +215,6 @@ public:
 	}
 	size_t size() { return sz; }
 	T get() { return front(); }
-	friend std::ostream& operator<<(std::ostream& os, const Queue2<T>& v);
 };
 template <typename T>
 std::vector<T> GetVector(Queue2<T>& q) {
@@ -242,12 +225,4 @@ std::vector<T> GetVector(Queue2<T>& q) {
 		q.dequeue();
 	}
 	return temp;
-}
-template <typename T>
-std::ostream& operator<<(std::ostream& os, const Queue2<T>& v) {
-	for (size_t i = 0; i < v.sz; ++i) {
-		os << v.get()<<" ";
-		v.pop();
-	}
-	return os;
 }
