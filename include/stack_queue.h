@@ -131,6 +131,8 @@ public:
 template <typename T>
 class Queue : public Vector<T> {
 private:
+	size_t start = 0;
+	size_t end = 0;
 	//переопределение незадействованных методов
 	using Vector<T>::operator[];
 	void push_front(T el) override {};
@@ -138,8 +140,6 @@ private:
 	void insert(T el, size_t ind) override {};
 	using Vector<T>::Overexpression;
 public:
-	size_t start = 0;
-	size_t end = 0;
 	Queue(size_t n = 10) :Vector<T>(n) {};
 	void push_back(T el) override {
 		if (Vector<T>::IsFull()) throw std::logic_error("error");
