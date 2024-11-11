@@ -12,15 +12,6 @@ TEST(Vector, throws_when_create_vector_with_negative_length)
   ASSERT_ANY_THROW(Vector<int> v(-5));
 }
 
-
-TEST(Vector, copied_vector_has_its_own_memory)
-{
-	Vector<int> v1(5), v2(5);
-	Vector<int>* pv1 = &v1;
-	Vector<int>* pv2 = &v2;
-	EXPECT_NE(pv1, pv2);
-}
-
 TEST(Vector, can_get_size)
 {
   Vector<int> v(4);

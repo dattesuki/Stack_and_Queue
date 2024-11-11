@@ -13,14 +13,6 @@ TEST(Stack, throws_when_create_stack_with_negative_length)
   ASSERT_ANY_THROW(Stack<int> v(-5));
 }
 
-TEST(Stack, copied_stack_has_its_own_memory)
-{
-	Stack<int> v1(5), v2(5);
-	Stack<int>* pv1 = &v1;
-	Stack<int>* pv2 = &v2;
-	EXPECT_NE(pv1, pv2);
-}
-
 TEST(Stack, can_get_size)
 {
   Stack<int> v(4);
