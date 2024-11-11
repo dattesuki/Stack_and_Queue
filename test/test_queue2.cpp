@@ -51,7 +51,15 @@ TEST(Queue2, check_push)
 	v2.push_back(2);
 	v1.enqueue(1);
 	v1.enqueue(2);
-	EXPECT_EQ(GetVector(v1), v2);
+
+	std::vector<int> temp;
+	size_t size = v1.size();
+	for (size_t i = 0; i < size; ++i) {
+		temp.push_back(v1.get());
+		v1.dequeue();
+	}
+
+	EXPECT_EQ(temp, v2);
 }
 
 
@@ -62,7 +70,15 @@ TEST(Queue2, check_pop) {
 	v1.dequeue();  
 	v1.enqueue(3);
 	std::vector<int> v2 = { 2, 3 };  
-	EXPECT_EQ(GetVector(v1), v2);  
+
+	std::vector<int> temp;
+	size_t size = v1.size();
+	for (size_t i = 0; i < size; ++i) {
+		temp.push_back(v1.get());
+		v1.dequeue();
+	}
+
+	EXPECT_EQ(temp, v2);  
 }
 
 TEST(Queue2, check_throw1_pop)

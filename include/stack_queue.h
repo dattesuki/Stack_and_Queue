@@ -216,13 +216,4 @@ public:
 	size_t size() { return sz; }
 	T get() { return front(); }
 };
-template <typename T>
-std::vector<T> GetVector(Queue2<T>& q) {
-	std::vector<T> temp;
-	size_t size = q.size();
-	for (size_t i = 0; i < size; ++i) {
-		temp.push_back(q.get());
-		q.dequeue();
-	}
-	return temp;
-}
+
