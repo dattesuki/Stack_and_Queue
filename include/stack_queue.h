@@ -117,7 +117,7 @@ private:
 	//переопределение незадействованных методов
 	void push_front(T el) override{};
 	void pop_front() override {};
-	T front() override { return T(); }
+	//T front() override { return T(); }
 	void insert(T el, size_t ind) {};
 	using Vector<T>::operator[];
 public:
@@ -200,6 +200,12 @@ public:
 		}
 	}
 	
+    T back(){
+        if (!stack1.IsEmpty()) return stack1.back();
+        else if (!stack2.IsEmpty()) return stack2.front();
+        throw std::logic_error("empty");
+    }
+    
 	T front() {
 		T temp;
 		if (IsEmpty()) throw std::logic_error("error");

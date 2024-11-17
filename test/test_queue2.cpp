@@ -150,3 +150,18 @@ TEST(Queue2, hard_test) {
 	flag &= (s1.IsEmpty() == s2.empty());
 	EXPECT_EQ(flag, 1);
 }
+
+
+TEST(Queue2, check_push2)
+{
+    Queue2<int> v1;
+    std::vector<int> v2;
+    v2.push_back(1);
+    v2.push_back(2);
+    v1.push_back(1);
+    v1.push_back(2);
+
+
+    std::cout<<v1.back()<<std::endl<<v2.back();
+    EXPECT_EQ(v1.back(), v2.back());
+}
