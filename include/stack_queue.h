@@ -117,7 +117,7 @@ private:
 	//переопределение незадействованных методов
 	void push_front(T el) override{};
 	void pop_front() override {};
-	//T front() override { return T(); }
+	T front() override { return T(); }
 	void insert(T el, size_t ind) {};
 	using Vector<T>::operator[];
 public:
