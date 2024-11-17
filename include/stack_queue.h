@@ -202,7 +202,15 @@ public:
 	
     T back(){
         if (!stack1.IsEmpty()) return stack1.back();
-        else if (!stack2.IsEmpty()) return stack2.front();
+		else if (!stack2.IsEmpty()) {
+			Stack<T> temp(stack2);
+			T temp2;
+			while (!temp.IsEmpty()) {
+				temp2 = temp.back();
+				temp.pop_back();
+			}
+			return temp2;
+		}
         throw std::logic_error("empty");
     }
     
