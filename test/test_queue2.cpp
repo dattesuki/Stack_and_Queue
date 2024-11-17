@@ -41,14 +41,14 @@ TEST(Queue2, check_push)
 	std::vector<int> v2;
 	v2.push_back(1);
 	v2.push_back(2);
-	v1.enqueue(1);
-	v1.enqueue(2);
+	v1.push_back(1);
+	v1.push_back(2);
 
 	std::vector<int> temp;
 	size_t size = v1.size();
 	for (size_t i = 0; i < size; ++i) {
 		temp.push_back(v1.get());
-		v1.dequeue();
+		v1.pop_front();
 	}
 
 	EXPECT_EQ(temp, v2);
@@ -57,10 +57,10 @@ TEST(Queue2, check_push)
 
 TEST(Queue2, check_pop) {
 	Queue2<int> v1;
-	v1.enqueue(1);
-	v1.enqueue(2);
-	v1.dequeue();  
-	v1.enqueue(3);
+	v1.push_back(1);
+	v1.push_back(2);
+	v1.pop_front();  
+	v1.push_back(3);
     std::vector<int> v2; //= {2,3 };
     v2.push_back(2);
     v2.push_back(3);
@@ -69,7 +69,7 @@ TEST(Queue2, check_pop) {
 	size_t size = v1.size();
 	for (size_t i = 0; i < size; ++i) {
 		temp.push_back(v1.get());
-		v1.dequeue();
+		v1.pop_front();
 	}
 
 	EXPECT_EQ(temp, v2);  
@@ -78,7 +78,7 @@ TEST(Queue2, check_pop) {
 TEST(Queue2, check_throw1_pop)
 {
 	Queue2<int> v;
-	ASSERT_ANY_THROW(v.dequeue());
+	ASSERT_ANY_THROW(v.pop_front());
 }
 
 
@@ -95,8 +95,8 @@ TEST(Queue2, check_get_front)
 	std::vector<int> v2;
 	v2.push_back(1);
 	v2.push_back(2);
-	v1.enqueue(1);
-	v1.enqueue(2);
+	v1.push_back(1);
+	v1.push_back(2);
 	EXPECT_EQ(v1.get(), v2.front());
 }
 
@@ -104,21 +104,21 @@ TEST(Queue2, soft_test) {
 	Queue2<float> s1(10);
 	std::queue<float> s2;
 	for (int i = 0; i < 9; ++i) {
-		s1.enqueue(i * 2.5);
+		s1.push_back(i * 2.5);
 		s2.push(i * 2.5);
 	}
 	bool flag = 1;
 	for (int i = 0; i < 5; ++i) {
-		s1.dequeue();
+		s1.pop_front();
 		s2.pop();
 	}
 	for (int i = 0; i < 3; ++i) {
-		s1.enqueue(i * 2.5);
+		s1.push_back(i * 2.5);
 		s2.push(i * 2.5);
 	}
 	for (size_t i = 0; i < s2.size(); ++i) {
 		flag &= (s1.get() == s2.front());
-		s1.dequeue();
+		s1.pop_front();
 		s2.pop();
 	}
 	flag &= (s1.IsEmpty() == s2.empty());
@@ -129,22 +129,22 @@ TEST(Queue2, hard_test) {
 	Queue2<float> s1(10000);
 	std::queue<float> s2;
 	for (size_t i = 0; i < 1000; ++i) {
-		s1.enqueue(float(i) / 10);
+		s1.push_back(float(i) / 10);
 		s2.push(float(i) / 10);
 	}
 	for (size_t i = 0; i < 100; ++i) {
-		s1.dequeue();
+		s1.pop_front();
 		s2.pop();
 	}
 	for (size_t i = 0; i < 2000; ++i) {
-		s1.enqueue(float(i) / 10);
+		s1.push_back(float(i) / 10);
 		s2.push(float(i) / 10);
 	}
 	bool flag = 1;
 	for (size_t i = 0; i < s2.size(); ++i) {
 		flag &= (s1.get() == s2.front());
 		//std::cout << s1.get() << " " << s2.front() << std::endl;
-		s1.dequeue();
+		s1.pop_front();
 		s2.pop();
 	}
 	flag &= (s1.IsEmpty() == s2.empty());

@@ -140,21 +140,21 @@ private:
     void insert(T el, size_t ind) {};
 	using Vector<T>::Overexpression;
 public:
-	Queue(size_t n = 10) :Vector<T>(n) {};
+    Queue(int n = 10):Vector<T>(n) {};
 	void push_back(T el) override {
 		if (Vector<T>::IsFull()) throw std::logic_error("error");
 		if (end < (Vector<T>::capacity - 1)) Vector<T>::pMem[end++] = el;
 		else Vector<T>::pMem[end = 0] = el;
 		++Vector<T>::sz;
 	}
-	void enqueue(T el) {this->push_back(el);}
+	
 	void pop_front() override {
 		if (Vector<T>::IsEmpty()) throw std::logic_error("error");
 		if (start == (Vector<T>::capacity - 1)) start = 0;
 		else ++start;
 		--Vector<T>::sz;
 	}
-	void dequeue() { this->pop_front(); }
+	
 	T front() override{
 		if (Vector<T>::IsEmpty()) throw std::logic_error("error");
 		return Vector<T>::pMem[start];
@@ -174,7 +174,7 @@ class Queue2{
 	size_t sz;
 	size_t copacity;
 public:
-	Queue2(size_t n = 10) :stack1(n), stack2(n), sz(0), copacity(n) {}
+	Queue2(int n = 10) :stack1(n), stack2(n), sz(0), copacity(n) {}
 	bool IsEmpty() {
 		if (!(stack2.IsEmpty())) {
 			return stack2.IsEmpty();
@@ -182,7 +182,7 @@ public:
 		return stack1.IsEmpty();
 	}
 	void push_back(T el) { ++sz; stack1.push(el); }
-	void enqueue(T el) { this->push_back(el); }
+	
 	void pop_front() {
 		T temp;
 		if (IsEmpty()) throw std::logic_error("error");
@@ -199,7 +199,7 @@ public:
 			stack2.pop();
 		}
 	}
-	void dequeue() { pop_front(); }
+	
 	T front() {
 		T temp;
 		if (IsEmpty()) throw std::logic_error("error");
