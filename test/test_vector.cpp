@@ -54,7 +54,10 @@ TEST(Vector,check_index)
 	v.push_back(1);
 	v.push_back(3);
 	v[1] = 2;
-	std::vector<int> v2 = { 1,2,3 };
+    std::vector<int> v2; //= { 1,2,3 };
+    v2.push_back(1);
+    v2.push_back(2);
+    v2.push_back(3);
 	EXPECT_EQ(v.GetVector(),v2);
 }
 

@@ -21,7 +21,7 @@ public:
     Vector(Vector const &v) :sz(v.sz), capacity(v.capacity) {
 		pMem = new T[capacity];
 		if (pMem == nullptr) throw std::bad_alloc();
-		std::copy(v.pMem, v.pMem+(sz * sizeof(T)), v.pMem);
+		std::copy(v.pMem, v.pMem+sz, pMem);
 	}
 
 	Vector(T* arr, size_t size_array):sz(size_array), capacity(size_array) {
@@ -54,7 +54,7 @@ public:
 		return (sz == 0);
 	}
 
-	virtual T& operator[](size_t n) { 
+	T& operator[](size_t n) {
 		if (n < 0 || n >= capacity) throw std::logic_error("error");
 		return pMem[n]; 
 	}
@@ -92,7 +92,7 @@ public:
 		for (size_t i = 0; i < (sz); ++i) pMem[i] = pMem[i + 1];
 	}
 	
-	virtual void insert(T el, size_t ind) {
+	void insert(T el, size_t ind) {
 		if (ind < 0 || ind > sz) throw std::logic_error("error");
 		if (IsFull()) Overexpression();
 		for (size_t i = ind; i < sz; ++i) pMem[i + 1] = pMem[i];
@@ -100,7 +100,7 @@ public:
 		sz++;
 	}
 
-	virtual std::vector<T> GetVector() {
+	std::vector<T> GetVector() {
 		std::vector<T> temp;
 		for (size_t i = 0; i < sz; ++i) {
 			temp.push_back(pMem[i]);
@@ -137,7 +137,7 @@ private:
 	using Vector<T>::operator[];
 	void push_front(T el) override {};
 	void pop_back() override {};
-	void insert(T el, size_t ind) override {};
+    void insert(T el, size_t ind) {};
 	using Vector<T>::Overexpression;
 public:
 	Queue(size_t n = 10) :Vector<T>(n) {};

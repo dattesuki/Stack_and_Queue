@@ -61,7 +61,9 @@ TEST(Queue2, check_pop) {
 	v1.enqueue(2);
 	v1.dequeue();  
 	v1.enqueue(3);
-	std::vector<int> v2 = { 2, 3 };  
+    std::vector<int> v2; //= {2,3 };
+    v2.push_back(2);
+    v2.push_back(3);
 
 	std::vector<int> temp;
 	size_t size = v1.size();
