@@ -1,111 +1,143 @@
-#include "tmatrix.h"
-
+#include "stack_queue.h"
 #include <gtest.h>
+#include <vector>
+#include <queue>
 
-TEST(TDynamicMatrix, can_create_matrix_with_positive_length)
+TEST(Queue, can_create_stack_with_positive_length)
 {
-  ASSERT_NO_THROW(TDynamicMatrix<int> m(5));
+	ASSERT_NO_THROW(Queue<int> v(5));
 }
 
-TEST(TDynamicMatrix, cant_create_too_large_matrix)
+TEST(Queue, throws_when_create_stack_with_negative_length)
 {
-  ASSERT_ANY_THROW(TDynamicMatrix<int> m(MAX_MATRIX_SIZE + 1));
+	ASSERT_ANY_THROW(Queue<int> v(-5));
 }
 
-TEST(TDynamicMatrix, throws_when_create_matrix_with_negative_length)
+TEST(Queue, can_get_size)
 {
-  ASSERT_ANY_THROW(TDynamicMatrix<int> m(-5));
+	Queue<int> v(4);
+
+	EXPECT_EQ(0, v.size());
 }
 
-TEST(TDynamicMatrix, can_create_copied_matrix)
+TEST(Queue, can_get_size2)
 {
-  TDynamicMatrix<int> m(5);
-
-  ASSERT_NO_THROW(TDynamicMatrix<int> m1(m));
+	Queue<int> v(4);
+	v.push_back(5);
+	EXPECT_EQ(1, v.size());
 }
 
-TEST(TDynamicMatrix, copied_matrix_is_equal_to_source_one)
+TEST(Queue, can_get_size3)
 {
-  ADD_FAILURE();
+	Queue<int> v(16);
+	for (size_t temp = 0; temp < 10; ++temp) v.push_back(5);
+	EXPECT_EQ(10, v.size());
 }
 
-TEST(TDynamicMatrix, copied_matrix_has_its_own_memory)
+
+TEST(Queue, check_push)
 {
-  ADD_FAILURE();
+	Queue<int> v1;
+	std::vector<int> v2;
+	v2.push_back(1);
+	v2.push_back(2);
+	v1.push_back(1);
+	v1.push_back(2);
+	EXPECT_EQ(v1.GetVector(), v2);
 }
 
-TEST(TDynamicMatrix, can_get_size)
+
+TEST(Queue, check_pop)
 {
-  ADD_FAILURE();
+	Queue<int> v1;
+	std::vector<int> v2;
+	v2.push_back(1);
+	v2.pop_back();
+	v2.push_back(2);
+	v1.push_back(2);
+	v1.pop_front();
+	v1.push_back(1);
+	EXPECT_EQ(v1.GetVector(), v2);
 }
 
-TEST(TDynamicMatrix, can_set_and_get_element)
+TEST(Queue, check_throw1_pop)
 {
-  ADD_FAILURE();
+	Queue<int> v;
+	ASSERT_ANY_THROW(v.pop_front());
 }
 
-TEST(TDynamicMatrix, throws_when_set_element_with_negative_index)
+
+TEST(Queue, check_throw2_get)
 {
-  ADD_FAILURE();
+	Queue<int> v;
+	ASSERT_ANY_THROW(v.get());
 }
 
-TEST(TDynamicMatrix, throws_when_set_element_with_too_large_index)
+
+TEST(Queue, check_get_front)
 {
-  ADD_FAILURE();
+	Queue<int> v1;
+	std::vector<int> v2;
+	v2.push_back(1);
+	v2.push_back(2);
+	v1.push_back(1);
+	v1.push_back(2);
+	EXPECT_EQ(v1.get(), v2.front());
 }
 
-TEST(TDynamicMatrix, can_assign_matrix_to_itself)
-{
-  ADD_FAILURE();
+TEST(Queue, soft_test) {
+	Queue<float> s1(10);
+	std::queue<float> s2;
+	for (int i = 0; i < 9; ++i) {
+		s1.push_back(i * 2.5);
+		s2.push(i * 2.5);
+	}
+	//start = 0
+	//end = 9
+	bool flag = 1;
+	for (int i = 0; i < 5; ++i) {
+		s1.pop_front();
+		s2.pop();
+	}
+	//start = 5
+	//end = 9;
+	for (int i = 0; i < 3; ++i) {
+		s1.push_back(i * 2.5);
+		s2.push(i * 2.5);
+	}
+	//start = 5
+	//end = 2
+	for (size_t i = 0; i < s2.size(); ++i) {
+		flag &= (s1.get() == s2.front());
+		s1.pop_front();
+		s2.pop();
+	}
+	flag &= (s1.IsEmpty() == s2.empty());
+	EXPECT_EQ(flag, 1);
 }
 
-TEST(TDynamicMatrix, can_assign_matrices_of_equal_size)
-{
-  ADD_FAILURE();
+TEST(Queue, hard_test) {
+	Queue<float> s1(10000);
+	std::queue<float> s2;
+	for (size_t i = 0; i < 1000; ++i) {
+		s1.push_back(float(i) / 10);
+		s2.push(float(i) / 10);
+	}
+	for (size_t i = 0; i < 100; ++i) {
+		s1.pop_front();
+		s2.pop();
+	}
+	for (size_t i = 0; i < 2000; ++i) {
+		s1.push_back(float(i) / 10);
+		s2.push(float(i) / 10);
+	}
+	bool flag = 1;
+	for (size_t i = 0; i < s2.size(); ++i) {
+		flag &= (s1.get() == s2.front());
+		//std::cout << s1.get() << " " << s2.front() << std::endl;
+		s1.pop_front();
+		s2.pop();
+	}
+	flag &= (s1.IsEmpty() == s2.empty());
+	EXPECT_EQ(flag, 1);
 }
-
-TEST(TDynamicMatrix, assign_operator_change_matrix_size)
-{
-  ADD_FAILURE();
-}
-
-TEST(TDynamicMatrix, can_assign_matrices_of_different_size)
-{
-  ADD_FAILURE();
-}
-
-TEST(TDynamicMatrix, compare_equal_matrices_return_true)
-{
-  ADD_FAILURE();
-}
-
-TEST(TDynamicMatrix, compare_matrix_with_itself_return_true)
-{
-  ADD_FAILURE();
-}
-
-TEST(TDynamicMatrix, matrices_with_different_size_are_not_equal)
-{
-  ADD_FAILURE();
-}
-
-TEST(TDynamicMatrix, can_add_matrices_with_equal_size)
-{
-  ADD_FAILURE();
-}
-
-TEST(TDynamicMatrix, cant_add_matrices_with_not_equal_size)
-{
-  ADD_FAILURE();
-}
-
-TEST(TDynamicMatrix, can_subtract_matrices_with_equal_size)
-{
-  ADD_FAILURE();
-}
-
-TEST(TDynamicMatrix, cant_subtract_matrixes_with_not_equal_size)
-{
-  ADD_FAILURE();
-}
-

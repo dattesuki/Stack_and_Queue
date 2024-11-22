@@ -1,141 +1,118 @@
-#include "tmatrix.h"
-
+#include "stack_queue.h"
 #include <gtest.h>
+#include <vector>
+#include <stack>
 
-TEST(TDynamicVector, can_create_vector_with_positive_length)
+TEST(Stack, can_create_stack_with_positive_length)
 {
-  ASSERT_NO_THROW(TDynamicVector<int> v(5));
+  ASSERT_NO_THROW(Stack<int> v(5));
 }
 
-TEST(TDynamicVector, cant_create_too_large_vector)
+TEST(Stack, throws_when_create_stack_with_negative_length)
 {
-  ASSERT_ANY_THROW(TDynamicVector<int> v(MAX_VECTOR_SIZE + 1));
+  ASSERT_ANY_THROW(Stack<int> v(-5));
 }
 
-TEST(TDynamicVector, throws_when_create_vector_with_negative_length)
+TEST(Stack, can_get_size)
 {
-  ASSERT_ANY_THROW(TDynamicVector<int> v(-5));
+  Stack<int> v(4);
+
+  EXPECT_EQ(0, v.size());
 }
 
-TEST(TDynamicVector, can_create_copied_vector)
+TEST(Stack, can_get_size2)
 {
-  TDynamicVector<int> v(10);
-
-  ASSERT_NO_THROW(TDynamicVector<int> v1(v));
+	Stack<int> v(4);
+	v.push_back(5);
+	EXPECT_EQ(1, v.size());
 }
 
-TEST(TDynamicVector, copied_vector_is_equal_to_source_one)
+TEST(Stack, can_get_size3)
 {
-  ADD_FAILURE();
+	Stack<int> v(16);
+	for(size_t temp = 0; temp<10; ++temp) v.push_back(5);
+	EXPECT_EQ(10, v.size());
 }
 
-TEST(TDynamicVector, copied_vector_has_its_own_memory)
+TEST(Stack, can_get_size4)
 {
-  ADD_FAILURE();
+	Stack<int> v(4);//проверка работоспособности перевыделения
+	for (size_t temp = 0; temp < 10; ++temp) v.push_back(5);
+	EXPECT_EQ(10, v.size());
 }
 
-TEST(TDynamicVector, can_get_size)
-{
-  TDynamicVector<int> v(4);
 
-  EXPECT_EQ(4, v.size());
+TEST(Stack, check_push)
+{
+	Stack<int> v1;
+	std::vector<int> v2;
+	v2.push_back(1);
+	v2.push_back(2);
+	v1.push(1);
+	v1.push(2);
+	EXPECT_EQ(v1.GetVector(), v2);
 }
 
-//TEST(TDynamicVector, can_set_and_get_element)
-//{
-//  TDynamicVector<int> v(4);
-//  v[0] = 4;
-//
-//  EXPECT_EQ(4, v[0]);
-//}
 
-TEST(TDynamicVector, throws_when_set_element_with_negative_index)
+TEST(Stack, check_pop)
 {
-  ADD_FAILURE();
+	Stack<int> v1;
+	std::vector<int> v2;
+	v2.push_back(1);
+	v2.pop_back();
+	v2.push_back(2);
+	v1.push(1);
+	v1.pop();
+	v1.push(2);
+	EXPECT_EQ(v1.GetVector(), v2);
 }
 
-TEST(TDynamicVector, throws_when_set_element_with_too_large_index)
+TEST(Stack, check_throw1_pop)
 {
-  ADD_FAILURE();
+	Stack<int> v;
+	ASSERT_ANY_THROW(v.pop_back());
 }
 
-TEST(TDynamicVector, can_assign_vector_to_itself)
+
+TEST(Stack, check_throw2_get)
 {
-  ADD_FAILURE();
+	Stack<int> v;
+	ASSERT_ANY_THROW(v.back());
 }
 
-TEST(TDynamicVector, can_assign_vectors_of_equal_size)
+
+TEST(Stack, check_get_back)
 {
-  ADD_FAILURE();
+	Stack<int> v1;
+	std::vector<int> v2;
+	v2.push_back(1);
+	v2.push_back(2);
+	v1.push_back(1);
+	v1.push_back(2);
+	EXPECT_EQ(v1.get(), v2.back());
 }
 
-TEST(TDynamicVector, assign_operator_change_vector_size)
-{
-  ADD_FAILURE();
+TEST(Stack, hard_test) {
+	Stack<float> s1;
+	std::stack<float> s2;
+	for (size_t i = 0; i < 1000; ++i) {
+		s1.push(float(i) / 10);
+		s2.push(float(i) / 10);
+	}
+	for (size_t i = 0; i < 100; ++i) {
+		s1.pop();
+		s2.pop();
+	}
+	for (size_t i = 0; i < 2000; ++i) {
+		s1.push(float(i) / 10);
+		s2.push(float(i) / 10);
+	}
+	bool flag = 1;
+	for (size_t i = 0; i < s2.size(); ++i) {
+		flag &= (s1.back() == s2.top());
+		s1.pop();
+		s2.pop();
+	}
+	flag &= (s1.IsEmpty() == s2.empty());
+	EXPECT_EQ(flag, 1);
 }
-
-TEST(TDynamicVector, can_assign_vectors_of_different_size)
-{
-  ADD_FAILURE();
-}
-
-TEST(TDynamicVector, compare_equal_vectors_return_true)
-{
-  ADD_FAILURE();
-}
-
-TEST(TDynamicVector, compare_vector_with_itself_return_true)
-{
-  ADD_FAILURE();
-}
-
-TEST(TDynamicVector, vectors_with_different_size_are_not_equal)
-{
-  ADD_FAILURE();
-}
-
-TEST(TDynamicVector, can_add_scalar_to_vector)
-{
-  ADD_FAILURE();
-}
-
-TEST(TDynamicVector, can_subtract_scalar_from_vector)
-{
-  ADD_FAILURE();
-}
-
-TEST(TDynamicVector, can_multiply_scalar_by_vector)
-{
-  ADD_FAILURE();
-}
-
-TEST(TDynamicVector, can_add_vectors_with_equal_size)
-{
-  ADD_FAILURE();
-}
-
-TEST(TDynamicVector, cant_add_vectors_with_not_equal_size)
-{
-  ADD_FAILURE();
-}
-
-TEST(TDynamicVector, can_subtract_vectors_with_equal_size)
-{
-  ADD_FAILURE();
-}
-
-TEST(TDynamicVector, cant_subtract_vectors_with_not_equal_size)
-{
-  ADD_FAILURE();
-}
-
-TEST(TDynamicVector, can_multiply_vectors_with_equal_size)
-{
-  ADD_FAILURE();
-}
-
-TEST(TDynamicVector, cant_multiply_vectors_with_not_equal_size)
-{
-  ADD_FAILURE();
-}
-
